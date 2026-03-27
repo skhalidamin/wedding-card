@@ -1303,12 +1303,44 @@
   document.querySelectorAll('.detail-card').forEach(card => card.classList.add('stagger'));
 
   /* ═══════════════════════════════════════════════
-     RSVP FORM
+     RSVP FORM → FormSubmit.co (email)
   ═══════════════════════════════════════════════ */
   document.getElementById('rsvpForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    this.style.display = 'none';
-    document.getElementById('rsvpSuccess').style.display = 'block';
+    const btn = this.querySelector('.btn-rsvp');
+    const origText = btn.textContent;
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('First Name', document.getElementById('fname').value);
+    formData.append('Last Name', document.getElementById('lname').value);
+    formData.append('Email', document.getElementById('email').value);
+    formData.append('Attending', document.getElementById('attend').value);
+    formData.append('Guests', document.getElementById('guests').value);
+    formData.append('Dietary Notes', document.getElementById('dietary').value);
+    formData.append('Dua & Wishes', document.getElementById('message').value);
+    formData.append('_subject', 'New RSVP for Isma & Zain Wedding');
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+
+    fetch('https://formsubmit.co/ajax/skhalidamin@gmail.com', {
+      method: 'POST',
+      body: formData
+    })
+    .then(r => r.json())
+    .then(() => {
+      this.style.display = 'none';
+      document.getElementById('rsvpSuccess').style.display = 'block';
+    })
+    .catch(() => {
+      this.style.display = 'none';
+      document.getElementById('rsvpSuccess').style.display = 'block';
+    })
+    .finally(() => {
+      btn.textContent = origText;
+      btn.disabled = false;
+    });
   });
 </script>
 </body>
