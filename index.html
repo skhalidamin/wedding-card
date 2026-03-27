@@ -704,29 +704,39 @@
     .rsvp-success {
       display: none;
       text-align: center;
-      padding: 30px 0;
+      padding: 50px 20px;
+      animation: successFadeIn .8s ease forwards;
+    }
+    @keyframes successFadeIn {
+      from { opacity: 0; transform: scale(.85); }
+      to   { opacity: 1; transform: scale(1); }
     }
     .rsvp-success .checkmark {
-      width: 56px;
-      height: 56px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background: rgba(201,168,76,.15);
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 1.6rem;
+      margin: 0 auto 24px;
+      font-size: 2.4rem;
+      color: var(--emerald);
+      box-shadow: 0 0 30px rgba(212,160,23,.5);
     }
-    .rsvp-success p {
+    .rsvp-success .main-thanks {
       font-family: 'Great Vibes', cursive;
-      font-size: 1.8rem;
+      font-size: clamp(2.5rem, 6vw, 4rem);
       color: var(--gold-lt);
+      text-shadow: 0 0 20px rgba(240,208,96,.6);
+      margin-bottom: 12px;
     }
     .rsvp-success .sub {
       font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      color: rgba(253,248,240,.6);
-      margin-top: 6px;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: rgba(253,248,240,.85);
+      margin-top: 8px;
+      line-height: 1.6;
     }
 
     /* ─── FOOTER ─────────────────────────────────────────── */
@@ -1093,25 +1103,28 @@
       Your presence would be a blessing, In Shaa Allah.
     </p>
 
-    <form class="rsvp-form" id="rsvpForm">
+    <form class="rsvp-form" id="rsvpForm" action="https://formsubmit.co/skhalidamin@gmail.com" method="POST" target="rsvp-iframe">
+      <input type="hidden" name="_subject" value="New RSVP for Isma & Zain Wedding">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
       <div class="form-row">
         <div class="form-field">
           <label for="fname">First Name</label>
-          <input type="text" id="fname" placeholder="Your first name" required />
+          <input type="text" id="fname" name="First Name" placeholder="Your first name" required />
         </div>
         <div class="form-field">
           <label for="lname">Last Name</label>
-          <input type="text" id="lname" placeholder="Your last name" required />
+          <input type="text" id="lname" name="Last Name" placeholder="Your last name" required />
         </div>
       </div>
       <div class="form-field">
         <label for="email">Email Address</label>
-        <input type="email" id="email" placeholder="you@example.com" required />
+        <input type="email" id="email" name="Email" placeholder="you@example.com" required />
       </div>
       <div class="form-row">
         <div class="form-field">
           <label for="attend">Attending?</label>
-          <select id="attend" required>
+          <select id="attend" name="Attending" required>
             <option value="" disabled selected>Please select</option>
             <option value="yes">In Shaa Allah — Yes</option>
             <option value="no">Regretfully unable</option>
@@ -1119,7 +1132,7 @@
         </div>
         <div class="form-field">
           <label for="guests">Number of Guests</label>
-          <select id="guests">
+          <select id="guests" name="Guests">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -1129,20 +1142,21 @@
       </div>
       <div class="form-field">
         <label for="dietary">Dietary Notes</label>
-        <textarea id="dietary" placeholder="All food is Halal. Any allergies or preferences…"></textarea>
+        <textarea id="dietary" name="Dietary Notes" placeholder="All food is Halal. Any allergies or preferences…"></textarea>
       </div>
       <div class="form-field">
         <label for="message">Dua &amp; Wishes</label>
-        <textarea id="message" placeholder="Share your blessings &amp; duas…"></textarea>
+        <textarea id="message" name="Dua and Wishes" placeholder="Share your blessings &amp; duas…"></textarea>
       </div>
       <button type="submit" class="btn-rsvp">Send RSVP</button>
     </form>
 
     <div class="rsvp-success" id="rsvpSuccess">
       <div class="checkmark">✓</div>
-      <p>JazakAllah Khair!</p>
-      <p class="sub">We look forward to celebrating with you, In Shaa Allah.</p>
+      <p class="main-thanks">JazakAllah Khair!</p>
+      <p class="sub">Your RSVP has been received.<br>We look forward to celebrating with you, In Shaa Allah.</p>
     </div>
+    <iframe name="rsvp-iframe" style="display:none"></iframe>
   </div>
 </section>
 
@@ -1303,52 +1317,18 @@
   document.querySelectorAll('.detail-card').forEach(card => card.classList.add('stagger'));
 
   /* ═══════════════════════════════════════════════
-     RSVP FORM → FormSubmit.co (email)
+     RSVP FORM → FormSubmit.co (direct POST via iframe)
   ═══════════════════════════════════════════════ */
-  document.getElementById('rsvpForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const form = this;
-    const btn = form.querySelector('.btn-rsvp');
-    const origText = btn.textContent;
+  document.getElementById('rsvpForm').addEventListener('submit', function () {
+    var form = this;
+    var btn = form.querySelector('.btn-rsvp');
     btn.textContent = 'Sending…';
     btn.disabled = true;
-
-    const data = {
-      'First Name': document.getElementById('fname').value,
-      'Last Name': document.getElementById('lname').value,
-      'Email': document.getElementById('email').value,
-      'Attending': document.getElementById('attend').value,
-      'Guests': document.getElementById('guests').value,
-      'Dietary Notes': document.getElementById('dietary').value,
-      'Dua & Wishes': document.getElementById('message').value,
-      '_subject': 'New RSVP for Isma & Zain Wedding',
-      '_captcha': 'false',
-      '_template': 'table'
-    };
-
-    fetch('https://formsubmit.co/ajax/skhalidamin@gmail.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(result) {
-      console.log('RSVP sent:', result);
+    /* form submits natively into hidden iframe */
+    setTimeout(function() {
       form.style.display = 'none';
       document.getElementById('rsvpSuccess').style.display = 'block';
-    })
-    .catch(function(err) {
-      console.log('RSVP error:', err);
-      form.style.display = 'none';
-      document.getElementById('rsvpSuccess').style.display = 'block';
-    })
-    .finally(function() {
-      btn.textContent = origText;
-      btn.disabled = false;
-    });
+    }, 1500);
   });
 </script>
 </body>
