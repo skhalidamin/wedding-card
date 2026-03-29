@@ -237,31 +237,47 @@
 
     .hero-date {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(.95rem, 2.4vw, 1.2rem);
-      letter-spacing: .12em;
+      font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+      letter-spacing: .14em;
       text-transform: uppercase;
-      color: var(--emerald);
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       animation: fadeUp 1s .65s ease both;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--emerald) 40%, var(--emerald-lt));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-weight: 900;
+      color: var(--gold-lt);
+      text-shadow: 0 0 24px rgba(240,208,96,.6), 0 2px 6px rgba(0,0,0,.3);
     }
+
+    .hero-info-box {
+      animation: fadeUp 1s .7s ease both;
+      margin-top: 8px;
+      display: inline-block;
+      padding: 18px 36px;
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(212,160,23,.12), rgba(240,208,96,.06));
+      box-shadow: 0 0 30px rgba(212,160,23,.2), inset 0 0 20px rgba(212,160,23,.05);
+      position: relative;
+    }
+    .hero-info-box::before,
+    .hero-info-box::after {
+      content: '✦';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      font-size: .9rem;
+      opacity: .7;
+    }
+    .hero-info-box::before { left: 12px; }
+    .hero-info-box::after  { right: 12px; }
 
     .hero-location {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
-      color: var(--text);
+      font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+      color: var(--gold-lt);
       font-weight: 700;
-      animation: fadeUp 1s .7s ease both;
-      padding: 10px 28px;
-      border: 1.5px solid var(--gold);
-      border-radius: 4px;
-      display: inline-block;
-      background: rgba(212,160,23,.06);
-      margin-top: 4px;
+      letter-spacing: .04em;
+      text-shadow: 0 0 14px rgba(240,208,96,.4);
     }
 
     .scroll-cue {
@@ -882,7 +898,9 @@
     <p class="quran-ref">— Surah Ar-Rum (30:21)</p>
 
     <p class="hero-date">1st &amp; 2nd May 2026</p>
-    <p class="hero-location">📍 Noor Bagh, Near Masjid Noor — Baramulla</p>
+    <div class="hero-info-box">
+      <p class="hero-location">📍 Noor Bagh, Near Masjid Noor — Baramulla</p>
+    </div>
   </div>
 
   <div class="scroll-cue">
