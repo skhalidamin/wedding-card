@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Invitation — Zain Wani & Isma Ashraf</title>
+  <meta property="og:title" content="Wedding Invitation — Zain Wani & Isma Ashraf" />
+  <meta property="og:description" content="You are cordially invited to the Wedding Ceremony of Zain Wani & Isma Ashraf. Bismillah hir-Rahman nir-Raheem." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Great+Vibes&family=Inter:wght@200;300;400;500;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0c;
+      --bg-card: #161616;
+      --bg-subtle: #1a1a1a;
+      --gold: #c9a84c;
+      --gold-bright: #e8c96d;
+      --gold-dim: rgba(201,168,76,.15);
+      --cream: #f5f0e8;
+      --cream-dim: rgba(245,240,232,.6);
+      --white: #fafaf8;
+      --green: #2d6a4f;
+      --green-dim: rgba(45,106,79,.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page loader ─── */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    #loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+    #loader .bismillah {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: var(--gold);
+      direction: rtl;
+      opacity: 0;
+      animation: loaderFade 1.2s .3s ease forwards;
+    }
+    #loader .loader-line {
+      width: 120px; height: 1px;
+      background: var(--gold-dim);
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    #loader .loader-line::after {
+      content: '';
+      position: absolute; left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: var(--gold);
+      animation: loaderSlide 1.8s .5s ease forwards;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+    @keyframes loaderFade { to { opacity: 1; } }
+    @keyframes loaderSlide { to { transform: scaleX(1); } }
+
+    /* ── Canvas ─── */
+    #bgCanvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Sections ─── */
+    .section {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px 24px;
+    }
+    .section--half { min-height: auto; }
+
+    .container {
+      max-width: 900px; width: 100%;
+      text-align: center;
+    }
+
+    /* ── Typography ─── */
+    .label {
+      font-size: .6rem;
+      letter-spacing: .6em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .body-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      line-height: 1.9;
+      color: var(--cream-dim);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 16px;
+      width: min(300px, 60vw); margin: 28px auto;
+    }
+    .divider span { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); }
+    .divider i { width: 4px; height: 4px; background: var(--gold); transform: rotate(45deg); display: block; }
+
+    /* ── Hero names ─── */
+    .names-wrap { margin: 32px 0 24px; }
+    .name {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      color: var(--cream);
+      display: block;
+      line-height: 1.1;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1);
+    }
+    .name.visible { opacity: 1; transform: none; }
+    .amp {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--gold);
+      display: block;
+      margin: -4px 0;
+      opacity: 0;
+      transition: opacity .8s .4s ease;
+    }
+    .amp.visible { opacity: 1; }
+
+    /* ── Date card ─── */
+    .date-card {
+      display: inline-flex; flex-direction: column; align-items: center;
+      padding: 28px 52px;
+      border: 1px solid rgba(201,168,76,.25);
+      border-radius: 16px;
+      background: rgba(201,168,76,.04);
+      backdrop-filter: blur(12px);
+      margin-top: 12px;
+    }
+    .date-card .date-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: .06em;
+    }
+    .date-card .date-divider {
+      width: 50px; height: 1px;
+      background: var(--gold); margin: 12px 0;
+    }
+    .date-card .venue-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 500; color: var(--gold-bright);
+    }
+    .date-card .venue-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem; color: var(--cream-dim);
+      margin-top: 4px; font-weight: 300;
+    }
+
+    /* ── Quran ─── */
+    .quran-arabic {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+      color: var(--gold-bright);
+      direction: rtl; line-height: 1.9;
+      margin-bottom: 14px;
+    }
+    .quran-english {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(.92rem, 2vw, 1.08rem);
+      color: var(--cream-dim);
+      max-width: 520px; margin: 0 auto;
+      line-height: 1.8;
+    }
+    .quran-ref {
+      font-size: .55rem; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 10px;
+    }
+
+    /* ── Event cards ─── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-top: 48px;
+    }
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(201,168,76,.12);
+      border-radius: 14px;
+      padding: 36px 20px 30px;
+      transition: transform .4s cubic-bezier(.16,1,.3,1), border-color .4s;
+    }
+    .event-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(201,168,76,.35);
+    }
+    .event-card.full { grid-column: 1 / -1; max-width: 400px; justify-self: center; }
+    .event-icon {
+      font-size: 1.8rem; margin-bottom: 14px;
+      display: block;
+    }
+    .event-label {
+      font-size: .55rem; letter-spacing: .4em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 8px; font-weight: 500;
+    }
+    .event-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 500;
+      color: var(--cream); line-height: 1.5;
+    }
+    .event-card .venue-qr {
+      display: inline-block; margin-top: 16px;
+      padding: 8px; background: var(--white);
+      border-radius: 8px; text-decoration: none;
+      transition: transform .3s;
+    }
+    .event-card .venue-qr:hover { transform: scale(1.04); }
+    .event-card .venue-qr img { display: block; border-radius: 4px; }
+    .event-card .qr-hint {
+      display: block; margin-top: 6px;
+      font-size: .7rem; color: var(--bg);
+      font-weight: 500; text-align: center;
+      letter-spacing: .04em;
+    }
+
+    /* ── Countdown ─── */
+    .countdown-grid {
+      display: flex; justify-content: center;
+      gap: 12px; margin-top: 40px; flex-wrap: wrap;
+    }
+    .cd-box {
+      min-width: 90px;
+      padding: 24px 16px 18px;
+      border: 1px solid rgba(201,168,76,.15);
+      border-radius: 12px;
+      background: var(--bg-card);
+    }
+    .cd-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem; font-weight: 600;
+      color: var(--cream); display: block; line-height: 1;
+    }
+    .cd-label {
+      font-size: .48rem; letter-spacing: .4em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 8px; display: block; font-weight: 500;
+    }
+    .cd-sep {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; color: var(--gold-dim);
+      align-self: center; padding-bottom: 10px;
+    }
+
+    /* ── Footer ─── */
+    .footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid rgba(201,168,76,.1);
+      text-align: center;
+      padding: 48px 20px;
+    }
+    .footer-dua {
+      font-family: 'Amiri', serif;
+      font-size: 1rem; color: var(--gold-bright);
+      direction: rtl; margin-bottom: 14px;
+    }
+    .footer-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem; color: var(--gold);
+      display: block; margin-bottom: 8px;
+    }
+    .footer-info {
+      font-size: .68rem; letter-spacing: .2em;
+      color: rgba(245,240,232,.35);
+    }
+
+    /* ── Scroll reveal ─── */
+    .reveal-js {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal-js.in-view { opacity: 1; transform: none; }
+
+    .stagger-child {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .stagger-child.in-view { opacity: 1; transform: none; }
+
+    /* ── Cursor glow (desktop) ─── */
+    .cursor-glow {
+      position: fixed;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: left .15s ease, top .15s ease;
+    }
+
+    /* ── Responsive ─── */
+    @media (max-width: 640px) {
+      .events-grid { grid-template-columns: 1fr; }
+      .event-card.full { max-width: none; }
+      .cd-box { min-width: 70px; padding: 18px 10px 14px; }
+      .section { padding: 60px 18px; }
+      .cursor-glow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+  <div class="loader-line"></div>
+</div>
+
+<!-- Canvas background -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- App root — JS renders here -->
+<div id="app"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════
+     DATA — single source of truth
+  ═══════════════════════════════════════════ */
+  const DATA = {
+    groom: 'Zain Wani',
+    bride: 'Isma Ashraf',
+    date: '1st & 2nd May 2026',
+    weddingDate: new Date('2026-05-01T19:00:00'),
+    venue: { name: 'Noor Bagh', detail: 'Near Masjid Noor, Baramulla' },
+    mapsUrl: 'https://www.google.com/maps/search/Noor+Bagh+Near+Masjid+Noor+Baramulla',
+    qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FNoor%2BBagh%2BNear%2BMasjid%2BNoor%2BBaramulla&color=f5f0e8&bgcolor=0c0c0c',
+    quran: {
+      arabic: 'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً',
+      english: '"And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquillity with them, and He has put love and mercy between your hearts."',
+      ref: 'Surah Ar-Rum (30:21)'
+    },
+    events: [
+      { icon: '📍', label: 'Venue', value: 'Noor Bagh<br>Near Masjid Noor, Baramulla', full: true, qr: true },
+      { icon: '🌙', label: 'Mehndiraat', value: 'Friday, 1st May<br>7:00 PM' },
+      { icon: '🍽️', label: 'Reception — Gents', value: 'Saturday, 2nd May<br>2:00 PM' },
+      { icon: '🍽️', label: 'Reception — Ladies', value: 'Saturday, 2nd May<br>4:00 PM' }
+    ],
+    footer: {
+      dua: 'بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ',
+      name: 'Mrs. Late Haji Mohd Ashraf Tanga'
+    }
+  };
+
+  /* ═══════════════════════════════════════════
+     UTILITY — createElement shorthand
+  ═══════════════════════════════════════════ */
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    if (attrs) Object.entries(attrs).forEach(([k, v]) => {
+      if (k === 'class') node.className = v;
+      else if (k === 'html') node.innerHTML = v;
+      else if (k === 'text') node.textContent = v;
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v);
+    });
+    children.flat().forEach(c => {
+      if (c == null) return;
+      node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+
+  /* ═══════════════════════════════════════════
+     BUILD SECTIONS
+  ═══════════════════════════════════════════ */
+  function buildHero() {
+    const section = el('section', { class: 'section' },
+      el('div', { class: 'container' },
+        el('p', { class: 'label reveal-js', text: 'Together with their families' }),
+        el('p', { class: 'body-text reveal-js', html: 'Request the honour of your Presence at the<br><strong>WEDDING CEREMONY</strong> of' }),
+        el('div', { class: 'names-wrap' },
+          el('span', { class: 'name', id: 'groomName', text: DATA.groom }),
+          el('span', { class: 'amp', id: 'ampSign', text: '&' }),
+          el('span', { class: 'name', id: 'brideName', text: DATA.bride })
+        ),
+        el('div', { class: 'divider' }, el('span'), el('i'), el('span')),
+        el('div', { class: 'date-card reveal-js' },
+          el('p', { class: 'date-main', text: DATA.date }),
+          el('div', { class: 'date-divider' }),
+          el('p', { class: 'venue-main', text: '📍 ' + DATA.venue.name }),
+          el('p', { class: 'venue-sub', text: DATA.venue.detail })
+        )
+      )
+    );
+    return section;
+  }
+
+  function buildQuran() {
+    const section = el('section', { class: 'section section--half' },
+      el('div', { class: 'container' },
+        el('p', { class: 'quran-arabic reveal-js', text: DATA.quran.arabic }),
+        el('p', { class: 'quran-english reveal-js', text: DATA.quran.english }),
+        el('p', { class: 'quran-ref reveal-js', text: '— ' + DATA.quran.ref })
+      )
+    );
+    return section;
+  }
+
+  function buildEvents() {
+    const grid = el('div', { class: 'events-grid' });
+
+    DATA.events.forEach((evt, i) => {
+      const card = el('div', { class: 'event-card stagger-child' + (evt.full ? ' full' : '') },
+        el('span', { class: 'event-icon', text: evt.icon }),
+        el('p', { class: 'event-label', text: evt.label }),
+        el('p', { class: 'event-value', html: evt.value })
+      );
+      card.style.transitionDelay = (i * 120) + 'ms';
+
+      if (evt.qr) {
+        const qrLink = el('a', { class: 'venue-qr', href: DATA.mapsUrl, target: '_blank', rel: 'noopener' },
+          el('img', { src: DATA.qrUrl, alt: 'Scan for directions', width: '110', height: '110' }),
+          el('span', { class: 'qr-hint', text: 'Scan for Directions' })
+        );
+        card.appendChild(qrLink);
+      }
+      grid.appendChild(card);
+    });
+
+    const section = el('section', { class: 'section section--half' },
+      el('div', { class: 'container reveal-js' },
+        el('p', { class: 'label', text: 'The Details' }),
+        el('p', { class: 'heading', text: 'Nikah & Walima' }),
+        el('p', { class: 'body-text', text: 'Join us to celebrate a blessed union, In Shaa Allah.' }),
+        grid
+      )
+    );
+    return section;
+  }
+
+  function buildCountdown() {
+    const wrap = el('div', { class: 'countdown-grid' });
+    const ids = ['cd-days', 'cd-hours', 'cd-mins', 'cd-secs'];
+    const labels = ['Days', 'Hours', 'Minutes', 'Seconds'];
+
+    ids.forEach((id, i) => {
+      if (i > 0) wrap.appendChild(el('span', { class: 'cd-sep', text: ':' }));
+      wrap.appendChild(
+        el('div', { class: 'cd-box' },
+          el('span', { class: 'cd-num', id: id, text: '00' }),
+          el('span', { class: 'cd-label', text: labels[i] })
+        )
+      );
+    });
+
+    const section = el('section', { class: 'section section--half' },
+      el('div', { class: 'container reveal-js' },
+        el('p', { class: 'label', text: 'In Shaa Allah' }),
+        el('p', { class: 'heading', text: 'Counting the Days' }),
+        wrap
+      )
+    );
+    return section;
+  }
+
+  function buildFooter() {
+    return el('footer', { class: 'footer' },
+      el('p', { class: 'footer-dua', text: DATA.footer.dua }),
+      el('span', { class: 'footer-name', text: DATA.footer.name }),
+      el('p', { class: 'footer-info', html: DATA.date + ' &nbsp;·&nbsp; Noor Bagh, Baramulla' }),
+      el('p', { class: 'footer-info', style: 'margin-top:16px', html: 'Made with ♥ &nbsp;·&nbsp; Alhamdulillah' })
+    );
+  }
+
+  /* ═══════════════════════════════════════════
+     RENDER
+  ═══════════════════════════════════════════ */
+  const app = document.getElementById('app');
+  app.appendChild(buildHero());
+  app.appendChild(buildQuran());
+  app.appendChild(buildEvents());
+  app.appendChild(buildCountdown());
+  app.appendChild(buildFooter());
+
+  /* ═══════════════════════════════════════════
+     CANVAS — geometric mesh background
+  ═══════════════════════════════════════════ */
+  (function () {
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, dots = [];
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight * 3;
+      initDots();
+    }
+
+    function initDots() {
+      dots = [];
+      const count = Math.min(Math.floor((w * h) / 25000), 120);
+      for (let i = 0; i < count; i++) {
+        dots.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - .5) * .15,
+          vy: (Math.random() - .5) * .15,
+          r: .6 + Math.random() * 1.2
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const scrollY = window.scrollY;
+      const viewTop = scrollY;
+      const viewBot = scrollY + window.innerHeight;
+
+      dots.forEach(d => {
+        d.x += d.vx;
+        d.y += d.vy;
+        if (d.x < 0 || d.x > w) d.vx *= -1;
+        if (d.y < 0 || d.y > h) d.vy *= -1;
+      });
+
+      // Lines between nearby dots
+      for (let i = 0; i < dots.length; i++) {
+        const a = dots[i];
+        if (a.y < viewTop - 100 || a.y > viewBot + 100) continue;
+        for (let j = i + 1; j < dots.length; j++) {
+          const b = dots[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y - scrollY);
+            ctx.lineTo(b.x, b.y - scrollY);
+            ctx.strokeStyle = `rgba(201,168,76,${.04 * (1 - dist / 150)})`;
+            ctx.lineWidth = .5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Dots
+      dots.forEach(d => {
+        if (d.y < viewTop - 50 || d.y > viewBot + 50) return;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y - scrollY, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(201,168,76,.2)';
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(draw);
+  })();
+
+  /* ═══════════════════════════════════════════
+     CURSOR GLOW — follow mouse
+  ═══════════════════════════════════════════ */
+  (function () {
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', function (e) {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+  })();
+
+  /* ═══════════════════════════════════════════
+     NAME REVEAL — typed stagger
+  ═══════════════════════════════════════════ */
+  (function () {
+    function revealName(id, delay) {
+      setTimeout(function () {
+        document.getElementById(id).classList.add('visible');
+      }, delay);
+    }
+    revealName('groomName', 800);
+    revealName('ampSign', 1200);
+    revealName('brideName', 1600);
+  })();
+
+  /* ═══════════════════════════════════════════
+     SCROLL REVEAL — IntersectionObserver
+  ═══════════════════════════════════════════ */
+  (function () {
+    const obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in-view');
+        // Stagger children
+        e.target.querySelectorAll('.stagger-child').forEach(function (child, i) {
+          setTimeout(function () {
+            child.classList.add('in-view');
+          }, i * 140);
+        });
+        obs.unobserve(e.target);
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-js').forEach(function (el) {
+      obs.observe(el);
+    });
+  })();
+
+  /* ═══════════════════════════════════════════
+     COUNTDOWN
+  ═══════════════════════════════════════════ */
+  (function () {
+    const els = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs')
+    };
+
+    function tick() {
+      const diff = DATA.weddingDate - Date.now();
+      if (diff <= 0) {
+        Object.values(els).forEach(function (e) { e.textContent = '00'; });
+        return;
+      }
+      els.d.textContent = String(Math.floor(diff / 864e5)).padStart(3, '0');
+      els.h.textContent = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, '0');
+      els.m.textContent = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
+      els.s.textContent = String(Math.floor((diff % 6e4) / 1e3)).padStart(2, '0');
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  /* ═══════════════════════════════════════════
+     LOADER — dismiss after 2.5s
+  ═══════════════════════════════════════════ */
+  setTimeout(function () {
+    document.getElementById('loader').classList.add('done');
+  }, 2500);
+
+})();
+</script>
+</body>
+</html>
