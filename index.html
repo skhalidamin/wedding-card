@@ -455,6 +455,34 @@
       max-width: 340px;
       justify-self: center;
     }
+    .venue-qr {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px;
+      background: var(--cream);
+      border-radius: 10px;
+      border: 1.5px solid rgba(212,160,23,.3);
+      text-decoration: none;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .venue-qr:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(11,61,46,.15);
+    }
+    .venue-qr img {
+      display: block;
+      border-radius: 6px;
+    }
+    .qr-hint {
+      display: block;
+      margin-top: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: .78rem;
+      color: var(--emerald);
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-align: center;
+    }
 
     .detail-card {
       background: #fffffe;
@@ -966,6 +994,10 @@
         <div class="detail-icon">📍</div>
         <p class="detail-label">Venue</p>
         <p class="detail-value">Noor Bagh<br>Near Masjid Noor, Baramulla</p>
+        <a class="venue-qr" href="https://www.google.com/maps/search/Noor+Bagh+Near+Masjid+Noor+Baramulla" target="_blank" rel="noopener">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FNoor%2BBagh%2BNear%2BMasjid%2BNoor%2BBaramulla&color=1a3c34&bgcolor=fffdf7" alt="Scan for directions" width="120" height="120" />
+          <span class="qr-hint">Scan for Directions</span>
+        </a>
       </div>
       <div class="detail-card">
         <div class="detail-icon">🍽️</div>
